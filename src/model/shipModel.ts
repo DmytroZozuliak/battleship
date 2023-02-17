@@ -31,7 +31,7 @@ function buildShip(ship: Ship, board: Cell[][]): void {
     y: getRandomNumber(),
   }
 
-  if (!isValidSibling(board, startPoint, direction)) {
+  if (!isValidSiblingStart(board, startPoint)) {
     buildShip(ship, board)
     return
   }
@@ -48,13 +48,6 @@ function buildShip(ship: Ship, board: Cell[][]): void {
 
     currentPoint = nextPoint
     shipCoordinates.push(currentPoint)
-
-    if (shipCoordinates.length === ship.length) {
-      if (!isValidSiblingEnd(board, nextPoint, direction, ship.length)) {
-        buildShip(ship, board)
-        return
-      }
-    }
   }
 
   if (shipCoordinates.length === ship.length) {
@@ -65,7 +58,7 @@ function buildShip(ship: Ship, board: Cell[][]): void {
   }
 }
 
-function getNextPoint(currentPoint: Point, direction: Direction) {
+function getNextPoint(currentPoint: Point, direction: Direction): Point {
   let nextPoint: Partial<Point> = {}
   switch (direction) {
     case Direction.left:
@@ -85,12 +78,13 @@ function getNextPoint(currentPoint: Point, direction: Direction) {
       nextPoint.y = currentPoint.y
       break
     default:
-      throw 'invalid'
+      console.log('invalid point')
+      return currentPoint
   }
   return nextPoint as Point
 }
 
-function isValidPoint(board: Cell[][], point: Point, direction: Direction) {
+function isValidPoint(board: Cell[][], point: Point, direction: Direction): boolean {
   // check for exist cell
   if (!board[point.x] || !board[point.x][point.y]) {
     return false
@@ -106,78 +100,24 @@ function isValidPoint(board: Cell[][], point: Point, direction: Direction) {
   return true
 }
 
-function isValidSibling(board: Cell[][], point: Point, direction: Direction) {
-  switch (direction) {
-    case Direction.left:
-      if (
-        board?.[point.x]?.[point.y + 1]?.isShip ||
-        board?.[point.x + 1]?.[point.y]?.isShip ||
-        board?.[point.x - 1]?.[point.y]?.isShip ||
-        board?.[point.x - 1]?.[point.y + 1]?.isShip ||
-        board?.[point.x + 1]?.[point.y + 1]?.isShip
-      ) {
-        return false
-      }
-      break
-    case Direction.right:
-      if (
-        board?.[point.x]?.[point.y - 1]?.isShip ||
-        board?.[point.x + 1]?.[point.y]?.isShip ||
-        board?.[point.x - 1]?.[point.y]?.isShip ||
-        board?.[point.x - 1]?.[point.y - 1]?.isShip ||
-        board?.[point.x + 1]?.[point.y - 1]?.isShip
-      ) {
-        return false
-      }
-      break
-    case Direction.up:
-      if (
-        board?.[point.x + 1]?.[point.y]?.isShip ||
-        board?.[point.x]?.[point.y + 1]?.isShip ||
-        board?.[point.x]?.[point.y - 1]?.isShip ||
-        board?.[point.x + 1]?.[point.y - 1]?.isShip ||
-        board?.[point.x + 1]?.[point.y + 1]?.isShip
-      ) {
-        return false
-      }
-      break
-    case Direction.down:
-      if (
-        board?.[point.x - 1]?.[point.y]?.isShip ||
-        board?.[point.x]?.[point.y + 1]?.isShip ||
-        board?.[point.x]?.[point.y - 1]?.isShip ||
-        board?.[point.x - 1]?.[point.y - 1]?.isShip ||
-        board?.[point.x - 1]?.[point.y + 1]?.isShip
-      ) {
-        return false
-      }
-      break
-    default:
-      throw 'invalid'
+function isValidSiblingStart(board: Cell[][], point: Point): boolean {
+  if (
+    board?.[point.x]?.[point.y + 1]?.isShip ||
+    board?.[point.x]?.[point.y - 1]?.isShip ||
+    board?.[point.x + 1]?.[point.y]?.isShip ||
+    board?.[point.x - 1]?.[point.y]?.isShip ||
+    board?.[point.x - 1]?.[point.y - 1]?.isShip ||
+    board?.[point.x - 1]?.[point.y + 1]?.isShip ||
+    board?.[point.x + 1]?.[point.y - 1]?.isShip ||
+    board?.[point.x + 1]?.[point.y + 1]?.isShip
+  ) {
+    return false
   }
+
   return true
 }
 
-function isValidSiblingEnd(
-  board: Cell[][],
-  point: Point,
-  direction: Direction,
-  shipLength: number
-) {
-  if (shipLength === 1) {
-    if (
-      board?.[point.x]?.[point.y - 1]?.isShip ||
-      board?.[point.x]?.[point.y + 1]?.isShip ||
-      board?.[point.x + 1]?.[point.y]?.isShip ||
-      board?.[point.x - 1]?.[point.y]?.isShip ||
-      board?.[point.x - 1]?.[point.y - 1]?.isShip ||
-      board?.[point.x - 1]?.[point.y + 1]?.isShip ||
-      board?.[point.x + 1]?.[point.y - 1]?.isShip ||
-      board?.[point.x + 1]?.[point.y + 1]?.isShip
-    ) {
-      return false
-    }
-  }
+function isValidSibling(board: Cell[][], point: Point, direction: Direction): boolean {
   switch (direction) {
     case Direction.left:
       if (
@@ -216,7 +156,8 @@ function isValidSiblingEnd(
       }
       break
     default:
-      throw 'invalid position'
+      console.log('invalid position')
+      return false
   }
 
   return true

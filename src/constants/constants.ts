@@ -8,12 +8,12 @@ export const boardSize = {
 export const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
 export function initialBoard(): Cell[][] {
-  let emptyBoard: Cell[][] = []
+  const boardResult: Cell[][] = []
 
   for (let x = 0; x < boardSize.boardHeight; x++) {
-    emptyBoard.push([])
+    boardResult.push([])
     for (let y = 0; y < boardSize.boardWidth; y++) {
-      emptyBoard[x].push({
+      boardResult[x].push({
         isShotted: false,
         isShip: false,
         coordinates: {
@@ -23,5 +23,5 @@ export function initialBoard(): Cell[][] {
       })
     }
   }
-  return emptyBoard
+  return boardResult
 }

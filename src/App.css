@@ -87,5 +87,12 @@ button {
   border: 0;
   width: 150px;
   color: inherit;
+  box-shadow: 0 5px 0px 0 #6f6d9d;
+  transition: all 0.1s ease 0s;
   cursor: pointer;
+}
+
+button:active {
+  transform: translate(0, 3px);
+  box-shadow: 0 2px 0px 0 #6f6d9d;
 }
